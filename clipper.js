@@ -275,93 +275,110 @@
 	/**
 	* @constructor
 	*/
-	ClipperLib.FPoint = function ()
-	{
-		var a = arguments,
-			alen = a.length;
-		this.X = 0;
-		this.Y = 0;
-		if (ClipperLib.use_xyz)
-		{
-			this.Z = 0;
-			if (alen === 3) // public FPoint(cInt x, cInt y, cInt z = 0)
+	ClipperLib.FPoint = class {
+		constructor() {
+			var a = arguments,
+				alen = a.length;
+			this.X = 0;
+			this.Y = 0;
+			if (ClipperLib.use_xyz)
 			{
-				this.X = a[0];
-				this.Y = a[1];
-				this.Z = a[2];
-			}
-			else if (alen === 2) // public FPoint(cInt x, cInt y)
-			{
-				this.X = a[0];
-				this.Y = a[1];
 				this.Z = 0;
-			}
-			else if (alen === 1)
-			{
-				if (a[0] instanceof ClipperLib.FPoint) // public FPoint(FPoint dp)
+				if (alen === 3) // public FPoint(cInt x, cInt y, cInt z = 0)
 				{
-					var dp = a[0];
-					this.X = dp.X;
-					this.Y = dp.Y;
+					this.X = a[0];
+					this.Y = a[1];
+					this.Z = a[2];
+				}
+				else if (alen === 2) // public FPoint(cInt x, cInt y)
+				{
+					this.X = a[0];
+					this.Y = a[1];
 					this.Z = 0;
 				}
-				else // public FPoint(FPoint pt)
+				else if (alen === 1)
 				{
-					var pt = a[0];
-					if (typeof (pt.Z) === "undefined") pt.Z = 0;
-					this.X = pt.X;
-					this.Y = pt.Y;
-					this.Z = pt.Z;
+					if (a[0] instanceof ClipperLib.FPoint) // public FPoint(FPoint dp)
+					{
+						var dp = a[0];
+						this.X = dp.X;
+						this.Y = dp.Y;
+						this.Z = 0;
+					}
+					else // public FPoint(FPoint pt)
+					{
+						var pt = a[0];
+						if (typeof (pt.Z) === "undefined") pt.Z = 0;
+						this.X = pt.X;
+						this.Y = pt.Y;
+						this.Z = pt.Z;
+					}
+				}
+				else // public FPoint()
+				{
+					this.X = 0;
+					this.Y = 0;
+					this.Z = 0;
 				}
 			}
-			else // public FPoint()
+			else // if (!ClipperLib.use_xyz)
 			{
-				this.X = 0;
-				this.Y = 0;
-				this.Z = 0;
+				if (alen === 2) // public FPoint(cInt X, cInt Y)
+				{
+					this.X = a[0];
+					this.Y = a[1];
+				}
+				else if (alen === 1)
+				{
+					if (a[0] instanceof ClipperLib.FPoint) // public FPoint(FPoint dp)
+					{
+						var dp = a[0];
+						this.X = dp.X;
+						this.Y = dp.Y;
+					}
+					else // public FPoint(FPoint pt)
+					{
+						var pt = a[0];
+						this.X = pt.X;
+						this.Y = pt.Y;
+					}
+				}
+				else // public FPoint(FPoint pt)
+				{
+					this.X = 0;
+					this.Y = 0;
+				}
 			}
+		};
+
+		set X(val) {
+			this.x = val;
 		}
-		else // if (!ClipperLib.use_xyz)
+
+		get X() {
+			return this.x;
+		}
+
+		set Y(val) {
+			this.y = val;
+		}
+
+		get Y() {
+			return this.y;
+		}
+
+		static op_Equality = function (a, b)
 		{
-			if (alen === 2) // public FPoint(cInt X, cInt Y)
-			{
-				this.X = a[0];
-				this.Y = a[1];
-			}
-			else if (alen === 1)
-			{
-				if (a[0] instanceof ClipperLib.FPoint) // public FPoint(FPoint dp)
-				{
-					var dp = a[0];
-					this.X = dp.X;
-					this.Y = dp.Y;
-				}
-				else // public FPoint(FPoint pt)
-				{
-					var pt = a[0];
-					this.X = pt.X;
-					this.Y = pt.Y;
-				}
-			}
-			else // public FPoint(FPoint pt)
-			{
-				this.X = 0;
-				this.Y = 0;
-			}
-		}
-	};
+			//return a == b;
+			return a.X === b.X && a.Y === b.Y;
+		};
 
-	ClipperLib.FPoint.op_Equality = function (a, b)
-	{
-		//return a == b;
-		return a.X === b.X && a.Y === b.Y;
-	};
-
-	ClipperLib.FPoint.op_Inequality = function (a, b)
-	{
-		//return a !== b;
-		return a.X !== b.X || a.Y !== b.Y;
-	};
+		static op_Inequality = function (a, b)
+		{
+			//return a !== b;
+			return a.X !== b.X || a.Y !== b.Y;
+		};
+	}
 
 	/*
   ClipperLib.FPoint.prototype.Equals = function (obj)
